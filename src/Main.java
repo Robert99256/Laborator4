@@ -1,30 +1,44 @@
 import java.io.*;
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-
-
-
 public class Main {
-    public static void main(String[] args) {
-        String file = "src/text.txt";
-        Map<String, Integer> wordCount = new HashMap<>();
-        try (Scanner sc = new Scanner(new File(file))) {
-            while (sc.hasNext()) {
-                String word = sc.next();
-                word = word.toLowerCase();
-                if (wordCount.containsKey(word)) {
-                    wordCount.put(word, wordCount.get(word) + 1);
-                } else {
-                    wordCount.put(word, 1);
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Nu s-a putut citi");
+
+    public static class Persoana{
+        private String nume;
+
+        public Persoana(String nume){
+            this.nume = nume;
         }
 
-        for (String word : wordCount.keySet()) {
-            System.out.println(word + " " + wordCount.get(word));
+        public String getNume(){
+            return nume;
+        }
+
+        @Override
+        public String toString(){
+            return nume;
+        }
+    }
+    public static void main(String[] args) {
+        String file = "src/persoane.txt";
+        List<Persoana> listaPersoane = new ArrayList<>();
+        try (Scanner sc = new Scanner(new File(file))) {
+            while (sc.hasNextLine()) {
+                String nume = sc.nextLine().trim();
+                listaPersoane.add(new Persoana(nume));
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Fisierul nu a fost gasit");
+            return;
+        }
+        Map<String, Integer> numarAparitii = new HashMap<>();
+        for (Persoana p : listaPersoane) {
+            String nume = p.getNume();
+            numarAparitii.put(nume, numarAparitii.getOrDefault(nume, 0) + 1);
+        }
+        for (Map.Entry<String, Integer> entry : numarAparitii.entrySet()) {
+            if (entry.getValue() >= 3) {
+                System.out.println(entry.getKey());
+            }
         }
     }
 }
